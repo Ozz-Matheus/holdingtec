@@ -12,6 +12,7 @@ class RolesSeeder extends Seeder
     {
         // Crear roles
         $superAdminRole = Role::firstOrCreate(['name' => 'super_admin', 'guard_name' => 'web']);
+        $adminRole = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
         $panelRole = Role::firstOrCreate(['name' => 'panel_user', 'guard_name' => 'web']);
 
         // Crear permisos base

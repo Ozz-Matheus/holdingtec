@@ -50,6 +50,7 @@ class UserForm
                             )
                             ->bulkToggleable()
                             ->getOptionLabelFromRecordUsing(fn ($record) => Str::headline($record->name))
+                            ->disabled(fn ($record) => auth()->user()->hasRole('super_admin') && $record?->is(auth()->user()))
                             ->columnSpanFull()
                             ->columns(3),
                         Toggle::make('active')
