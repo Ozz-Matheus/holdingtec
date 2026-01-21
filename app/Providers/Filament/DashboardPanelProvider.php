@@ -63,7 +63,9 @@ class DashboardPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->plugins([
-                FilamentShieldPlugin::make(),
+                FilamentShieldPlugin::make()
+                    ->navigationSort(1)
+                    ->navigationGroup(__('Global Management')),
                 CustomTenancyPlugin::make()->panel('admin'),
             ])
             ->authMiddleware([

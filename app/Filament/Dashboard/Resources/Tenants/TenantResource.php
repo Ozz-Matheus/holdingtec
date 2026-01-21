@@ -23,7 +23,7 @@ class TenantResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::GlobeAlt;
 
-    protected static ?string $recordTitleAttribute = 'Tenant';
+    protected static ?string $recordTitleAttribute = 'name';
 
     protected static ?int $navigationSort = 3;
 

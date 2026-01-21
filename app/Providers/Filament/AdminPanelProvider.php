@@ -11,6 +11,7 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\Width;
 use Filament\Support\Facades\FilamentColor;
 use Filament\Widgets\AccountWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -42,6 +43,7 @@ class AdminPanelProvider extends PanelProvider
             ->darkModeBrandLogo(asset('images/logo_oscuro.svg'))
             ->brandLogoHeight('3rem')
             ->sidebarCollapsibleOnDesktop()
+            ->maxContentWidth(Width::Full)
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\Filament\Admin\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\Filament\Admin\Pages')
             ->pages([
@@ -63,7 +65,9 @@ class AdminPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->plugins([
-                FilamentShieldPlugin::make(),
+                FilamentShieldPlugin::make()
+                    ->navigationSort(1)
+                    ->navigationGroup(__('Role Management')),
                 FilamentTenancyAppPlugin::make(),
             ])
             ->authMiddleware([
