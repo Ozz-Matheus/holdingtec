@@ -1,0 +1,19 @@
+{
+    "Name" : "Nombre",
+    "Email" : "Correo electrónico",
+    "Password" : "Contraseña",
+    "Active" : "Activo",
+    "Created By" : "Creado por",
+    "Created at" : "Creado en",
+    "Updated at" : "Actualizado en",
+    "Role Management": "Gestión de Roles",
+    "Role": "Rol",
+    "Roles": "Roles",
+    "Global Management" : "Gestión Global",
+    "Copied to clipboard" : "Copiado al portapapeles",
+    "Action Denied": "Acción denegada",
+    "Identifier": "Identificador",
+    "Existing Database (Unique ID)": "Base de datos existente (ID único)",
+    "filament-shield::filament-shield.column.guard_name": "Nombre del Guard",
+    "Link Existing DB": "Vincular Db existente"
+}

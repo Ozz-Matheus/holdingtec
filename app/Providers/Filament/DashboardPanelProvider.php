@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Plugins\CustomTenancyPlugin;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -35,7 +36,7 @@ class DashboardPanelProvider extends PanelProvider
             ->path('dashboard')
             ->login()
             ->colors([
-                'primary' => Color::Blue,
+                'primary' => Color::Gray,
             ])
             ->favicon(asset('images/favicon.png'))
             ->brandLogo(asset('images/logo_claro.svg'))
@@ -63,6 +64,7 @@ class DashboardPanelProvider extends PanelProvider
             ])
             ->plugins([
                 FilamentShieldPlugin::make(),
+                CustomTenancyPlugin::make()->panel('admin'),
             ])
             ->authMiddleware([
                 Authenticate::class,

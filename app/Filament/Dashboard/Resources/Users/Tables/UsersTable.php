@@ -26,13 +26,12 @@ class UsersTable
                 TextColumn::make('email')
                     ->label(__('Email'))
                     ->copyable()
-                    ->copyMessage(__('Email copied to clipboard'))
+                    ->copyMessage(__('Copied to clipboard'))
                     ->searchable(),
                 TextColumn::make('roles.name')
                     ->label(__('Roles'))
                     ->formatStateUsing(fn ($state) => Str::headline($state))
                     ->searchable()
-                    ->sortable()
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'super_admin' => 'indigo',
@@ -41,7 +40,7 @@ class UsersTable
                         default => 'gray',
                     }),
                 TextColumn::make('email_verified_at')
-                    ->label(__('Email verified at'))
+                    ->label(__('user.email_verified_on'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

@@ -68,18 +68,31 @@ class User extends Authenticatable implements FilamentUser
 
     public function canAccessPanel(Panel $panel): bool
     {
+        // 1️⃣ Super Admin
         if ($this->hasRole('super_admin')) {
             return true;
         }
 
-        if (! $this->isActive()) {
+        // 2️⃣ Evaluamos condiciones de bloqueo
+        // match(true) buscará la primera condición que se cumpla
+        $failure = match (true) {
+            tenant()?->is_active === false => [
+                'Workspace Deactivated',
+                'This workspace is currently deactivated. Contact the administrator.',
+            ],
+            ! $this->isActive() => [
+                'Account Deactivated',
+                'Your account has been deactivated. Contact the administrator.',
+            ],
+            default => null, // Si todo está bien
+        };
+
+        // 3️⃣ Ejecutamos el cierre de sesión una sola vez
+        if ($failure) {
+
             Auth::logout();
 
-            AppNotifier::danger(
-                'Account deactivated',
-                'Your account has been deactivated. Contact the administrator.',
-                true
-            );
+            AppNotifier::danger($failure[0], $failure[1], true);
 
             return false;
         }

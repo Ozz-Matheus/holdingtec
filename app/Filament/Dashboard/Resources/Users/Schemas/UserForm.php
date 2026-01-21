@@ -16,7 +16,7 @@ class UserForm
         return $schema
             ->components([
 
-                Section::make(__('User Data'))
+                Section::make()
                     ->columns(3)
                     ->schema([
                         TextInput::make('name')
@@ -37,7 +37,7 @@ class UserForm
                             ->required(fn (string $context) => $context === 'create')
                             ->helperText(
                                 fn (string $context) => $context === 'edit'
-                                    ? __("Leave it blank if you don't want to change your password.")
+                                    ? __('user.leave_empty_to_keep_password')
                                     : null
                             ),
                         CheckboxList::make('roles')
@@ -54,7 +54,7 @@ class UserForm
                             ->columns(3),
                         Toggle::make('active')
                             ->label(__('Active'))
-                            ->helperText(__('Enables or disables user access.'))
+                            ->helperText(__('user.toggle_user_access'))
                             ->required()
                             ->default(true),
 
