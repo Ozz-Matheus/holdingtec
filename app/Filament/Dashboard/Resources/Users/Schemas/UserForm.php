@@ -3,8 +3,9 @@
 namespace App\Filament\Dashboard\Resources\Users\Schemas;
 
 use Filament\Forms\Components\CheckboxList;
-use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
 
@@ -14,29 +15,51 @@ class UserForm
     {
         return $schema
             ->components([
-                TextInput::make('name')
-                    ->required(),
-                TextInput::make('email')
-                    ->label('Email address')
-                    ->email()
-                    ->required(),
-                DateTimePicker::make('email_verified_at'),
-                TextInput::make('password')
-                    ->password()
-                    ->required(),
-                CheckboxList::make('roles')
-                    ->label(__('Roles'))
-                    ->relationship(
-                        name: 'roles',
-                        titleAttribute: 'name',
-                        modifyQueryUsing: fn ($query) => $query
-                            ->when(! auth()->user()->hasRole('super_admin'), fn ($q) => $q->where('name', '!=', 'super_admin'))
-                    )
-                    ->bulkToggleable()
-                    ->getOptionLabelFromRecordUsing(fn ($record) => Str::headline($record->name))
-                    ->columnSpanFull()
-                    ->columns(3),
 
-            ]);
+                Section::make(__('User Data'))
+                    ->columns(3)
+                    ->schema([
+                        TextInput::make('name')
+                            ->label(__('Name'))
+                            ->required()
+                            ->maxLength(255),
+                        TextInput::make('email')
+                            ->label(__('Email'))
+                            ->email()
+                            ->required()
+                            ->maxLength(255),
+                        TextInput::make('password')
+                            ->label(__('Password'))
+                            ->password()
+                            ->maxLength(255)
+                            ->nullable()
+                            ->dehydrated(fn ($state) => filled($state))
+                            ->required(fn (string $context) => $context === 'create')
+                            ->helperText(
+                                fn (string $context) => $context === 'edit'
+                                    ? __("Leave it blank if you don't want to change your password.")
+                                    : null
+                            ),
+                        CheckboxList::make('roles')
+                            ->label(__('Roles'))
+                            ->relationship(
+                                name: 'roles',
+                                titleAttribute: 'name',
+                                modifyQueryUsing: fn ($query) => $query
+                                    ->when(! auth()->user()->hasRole('super_admin'), fn ($q) => $q->where('name', '!=', 'super_admin'))
+                            )
+                            ->bulkToggleable()
+                            ->getOptionLabelFromRecordUsing(fn ($record) => Str::headline($record->name))
+                            ->columnSpanFull()
+                            ->columns(3),
+                        Toggle::make('active')
+                            ->label(__('Active'))
+                            ->helperText(__('Enables or disables user access.'))
+                            ->required()
+                            ->default(true),
+
+                    ]),
+
+            ])->columns(1);
     }
 }

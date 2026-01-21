@@ -11,6 +11,7 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Facades\FilamentColor;
 use Filament\Widgets\AccountWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -23,6 +24,10 @@ class DashboardPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
+
+        FilamentColor::register([
+            'indigo' => Color::Indigo,
+        ]);
 
         return $panel
             ->default()
