@@ -15,9 +15,18 @@ class EditUser extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            DeleteAction::make(),
-            ForceDeleteAction::make(),
+            DeleteAction::make()
+                ->visible(function () {
+                    return ! $this->record->hasRole('super_admin');
+                }),
             RestoreAction::make(),
+            ForceDeleteAction::make()
+                ->visible(fn ($record): bool => auth()->user()->hasRole('super_admin') && ! $this->record->hasRole('super_admin')),
         ];
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
     }
 }

@@ -2,13 +2,8 @@
 
 namespace App\Filament\Dashboard\Resources\Users\Tables;
 
-use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Actions\ForceDeleteAction;
-use Filament\Actions\RestoreAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
@@ -60,18 +55,9 @@ class UsersTable
             ])
             ->recordActions([
                 EditAction::make(),
-                ActionGroup::make([
-
-                    DeleteAction::make(), // Envía a papelera
-                    RestoreAction::make(),      // Recupera de papelera
-                    ForceDeleteAction::make()
-                        ->visible(fn ($record): bool => auth()->user()->hasRole('super_admin')), // Borrado físico permanente
-
-                ])->color('primary')->link()->label(false)->tooltip(__('Actions')),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
