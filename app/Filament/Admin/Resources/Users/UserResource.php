@@ -2,6 +2,7 @@
 
 namespace App\Filament\Admin\Resources\Users;
 
+use App\Enums\RoleEnum;
 use App\Filament\Admin\Resources\Users\Pages\CreateUser;
 use App\Filament\Admin\Resources\Users\Pages\EditUser;
 use App\Filament\Admin\Resources\Users\Pages\ListUsers;
@@ -77,9 +78,9 @@ class UserResource extends Resource
     {
         $query = parent::getEloquentQuery();
 
-        if (! auth()->user()->hasRole('super_admin')) {
+        if (! auth()->user()->hasRole(RoleEnum::SUPER_ADMIN->value)) {
             $query->whereDoesntHave('roles', function ($q) {
-                $q->where('name', 'super_admin');
+                $q->where('name', RoleEnum::SUPER_ADMIN->value);
             });
         }
 

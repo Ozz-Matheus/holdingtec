@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\RoleEnum;
 use App\Models\Tenant;
 use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
@@ -120,7 +121,7 @@ class TenantCreatorService
 
             );
 
-            $superAdmin->assignRole('super_admin');
+            $superAdmin->assignRole(RoleEnum::SUPER_ADMIN->value);
 
             // --- USUARIO ADMIN ---
             $admin = User::updateOrCreate(
@@ -134,7 +135,7 @@ class TenantCreatorService
                 ]
             );
 
-            $admin->assignRole(auth()->user()->hasRole('super_admin') ? 'super_admin' : 'admin');
+            $admin->assignRole(auth()->user()->hasRole(RoleEnum::SUPER_ADMIN->value) ? RoleEnum::SUPER_ADMIN->value : RoleEnum::ADMIN->value);
 
         } catch (\Throwable $e) {
             // Capturamos cualquier error fatal del bloque general

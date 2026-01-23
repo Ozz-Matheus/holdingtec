@@ -2,6 +2,7 @@
 
 namespace App\Filament\Dashboard\Resources\Users\Schemas;
 
+use App\Enums\RoleEnum;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -46,11 +47,11 @@ class UserForm
                                 name: 'roles',
                                 titleAttribute: 'name',
                                 modifyQueryUsing: fn ($query) => $query
-                                    ->when(! auth()->user()->hasRole('super_admin'), fn ($q) => $q->where('name', '!=', 'super_admin'))
+                                    ->when(! auth()->user()->hasRole(RoleEnum::SUPER_ADMIN->value), fn ($q) => $q->where('name', '!=', RoleEnum::SUPER_ADMIN->value))
                             )
                             ->bulkToggleable()
                             ->getOptionLabelFromRecordUsing(fn ($record) => Str::headline($record->name))
-                            ->disabled(fn ($record) => auth()->user()->hasRole('super_admin') && $record?->is(auth()->user()))
+                            ->disabled(fn ($record) => auth()->user()->hasRole(RoleEnum::SUPER_ADMIN->value) && $record?->is(auth()->user()))
                             ->columnSpanFull()
                             ->columns(3),
                         Toggle::make('active')

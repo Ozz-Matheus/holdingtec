@@ -15,5 +15,13 @@
     "Identifier": "Identificador",
     "Existing Database (Unique ID)": "Base de datos existente (ID único)",
     "filament-shield::filament-shield.column.guard_name": "Nombre del Guard",
-    "Link Existing DB": "Vincular Db existente"
+    "Link Existing DB": "Vincular Db existente",
+    "Super Admin": "Super Administrador",
+    "Admin": "Administrador",
+    "Panel User": "Usuario del Panel",
+    "Workspace Deactivated": "Espacio de trabajo desactivado",
+    "This workspace is currently deactivated...": "Este espacio de trabajo está actualmente desactivado...",
+    "Account Deactivated": "Cuenta desactivada",
+    "Your account has been deactivated..." : "Su cuenta ha sido desactivada..."
+
 }

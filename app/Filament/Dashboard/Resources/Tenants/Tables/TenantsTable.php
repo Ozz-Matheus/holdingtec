@@ -18,6 +18,7 @@ class TenantsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with('domains'))
             ->columns([
                 TextColumn::make('id')
                     ->label(__('Identifier'))
@@ -27,7 +28,9 @@ class TenantsTable
                     ->label(trans('filament-tenancy::messages.columns.name'))
                     ->searchable()
                     ->description(function ($record) {
-                        return request()->getScheme().'://'.$record->domains()->first()?->domain.'.'.config('filament-tenancy.central_domain').'/admin';
+                        $domain = $record->domains->first()?->domain;
+
+                        return request()->getScheme().'://'.$domain.'.'.config('filament-tenancy.central_domain').'/admin';
                     }),
                 ToggleColumn::make('is_active')
                     ->sortable()

@@ -29,9 +29,9 @@ class TenantStorageInitializer
             : public_path("{$suffixBase}{$tenantId}");
 
         // Asegura directorios necesarios
-        $this->filesystem->ensureDirectoryExists("{$tenantStoragePath}/app/private", 0777, true);
-        $this->filesystem->ensureDirectoryExists("{$tenantStoragePath}/app/public", 0777, true);
-        $this->filesystem->ensureDirectoryExists("{$tenantStoragePath}/framework/cache", 0777, true);
+        $this->filesystem->ensureDirectoryExists("{$tenantStoragePath}/app/private", 0755, true);
+        $this->filesystem->ensureDirectoryExists("{$tenantStoragePath}/app/public", 0755, true);
+        $this->filesystem->ensureDirectoryExists("{$tenantStoragePath}/framework/cache", 0755, true);
 
         // Crea enlace simbólico si no existe
         if (! $this->filesystem->exists($publicPath)) {

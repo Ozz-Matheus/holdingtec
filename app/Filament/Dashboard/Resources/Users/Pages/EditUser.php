@@ -2,6 +2,7 @@
 
 namespace App\Filament\Dashboard\Resources\Users\Pages;
 
+use App\Enums\RoleEnum;
 use App\Filament\Dashboard\Resources\Users\UserResource;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ForceDeleteAction;
@@ -17,11 +18,11 @@ class EditUser extends EditRecord
         return [
             DeleteAction::make()
                 ->visible(function () {
-                    return ! $this->record->hasRole('super_admin');
+                    return ! $this->record->hasRole(RoleEnum::SUPER_ADMIN->value);
                 }),
             RestoreAction::make(),
             ForceDeleteAction::make()
-                ->visible(fn ($record): bool => auth()->user()->hasRole('super_admin') && ! $this->record->hasRole('super_admin')),
+                ->visible(fn ($record): bool => auth()->user()->hasRole(RoleEnum::SUPER_ADMIN->value) && ! $this->record->hasRole(RoleEnum::SUPER_ADMIN->value)),
         ];
     }
 

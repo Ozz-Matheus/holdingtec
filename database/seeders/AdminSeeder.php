@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\RoleEnum;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
@@ -13,12 +14,18 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
-        $superAdminRole = Role::create(['name' => 'super_admin']);
+        $superAdminRole = Role::firstOrCreate([
+            'name' => RoleEnum::SUPER_ADMIN->value,
+            'guard_name' => 'web',
+        ]);
+
+        $email = env('SUPER_ADMIN_EMAIL', 's@holdingtec.app');
+        $password = env('SUPER_ADMIN_PASSWORD', $email);
 
         $superAdmin = new User;
-        $superAdmin->name = 'Super Admin';
-        $superAdmin->email = 's@holdingtec.app';
-        $superAdmin->password = bcrypt('s@holdingtec.app');
+        $superAdmin->name = 'HoldingTec Admin';
+        $superAdmin->email = $email;
+        $superAdmin->password = bcrypt($password);
         $superAdmin->save();
 
         $superAdmin->assignRole($superAdminRole);

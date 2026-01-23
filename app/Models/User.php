@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\RoleEnum;
 use App\Support\AppNotifier;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
@@ -68,35 +69,38 @@ class User extends Authenticatable implements FilamentUser
 
     public function canAccessPanel(Panel $panel): bool
     {
-        // 1️⃣ Super Admin
-        if ($this->hasRole('super_admin')) {
+        if ($this->hasRole(RoleEnum::SUPER_ADMIN->value)) {
             return true;
         }
 
-        // 2️⃣ Evaluamos condiciones de bloqueo
-        // match(true) buscará la primera condición que se cumpla
-        $failure = match (true) {
-            tenant()?->is_active === false => [
-                'Workspace Deactivated',
-                'This workspace is currently deactivated. Contact the administrator.',
-            ],
-            ! $this->isActive() => [
-                'Account Deactivated',
-                'Your account has been deactivated. Contact the administrator.',
-            ],
-            default => null, // Si todo está bien
-        };
-
-        // 3️⃣ Ejecutamos el cierre de sesión una sola vez
-        if ($failure) {
+        if ($reason = $this->getAccessDenialReason()) {
 
             Auth::logout();
-
-            AppNotifier::danger($failure[0], $failure[1], true);
+            AppNotifier::danger($reason['title'], $reason['message'], true);
 
             return false;
+
         }
 
         return true;
+    }
+
+    private function getAccessDenialReason(): ?array
+    {
+        return match (true) {
+
+            tenant()?->is_active === false => [
+                'title' => __('Workspace Deactivated'),
+                'message' => __('This workspace is currently deactivated...'),
+            ],
+
+            ! $this->isActive() => [
+                'title' => __('Account Deactivated'),
+                'message' => __('Your account has been deactivated...'),
+            ],
+
+            default => null,
+
+        };
     }
 }

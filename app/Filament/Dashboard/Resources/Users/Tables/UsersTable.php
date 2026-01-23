@@ -2,6 +2,7 @@
 
 namespace App\Filament\Dashboard\Resources\Users\Tables;
 
+use App\Enums\RoleEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
@@ -27,13 +28,15 @@ class UsersTable
                     ->searchable(),
                 TextColumn::make('roles.name')
                     ->label(__('Roles'))
-                    ->formatStateUsing(fn ($state) => Str::headline($state))
+                    ->formatStateUsing(
+                        fn (string $state): string => RoleEnum::tryFrom($state)?->label() ?? Str::headline($state)
+                    )
                     ->searchable()
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
-                        'super_admin' => 'indigo',
-                        'admin' => 'success',
-                        'panel_user' => 'primary',
+                        RoleEnum::SUPER_ADMIN->value => 'indigo',
+                        RoleEnum::ADMIN->value => 'success',
+                        RoleEnum::PANEL_USER->value => 'primary',
                         default => 'gray',
                     }),
                 ToggleColumn::make('active')
