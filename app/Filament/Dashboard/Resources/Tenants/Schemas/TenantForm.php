@@ -78,7 +78,7 @@ class TenantForm
                         TextInput::make('password')
                             ->label(trans('filament-tenancy::messages.columns.password'))
                             ->password()
-                            ->revealable(filament()->arePasswordsRevealable())
+                            ->revealable()
                             ->rule(Password::default())
                             ->autocomplete('new-password')
                             ->dehydrated(fn ($state): bool => filled($state))
@@ -89,7 +89,7 @@ class TenantForm
                         TextInput::make('passwordConfirmation')
                             ->label(trans('filament-tenancy::messages.columns.passwordConfirmation'))
                             ->password()
-                            ->revealable(filament()->arePasswordsRevealable())
+                            ->revealable()
                             ->dehydrated(false),
 
                         Toggle::make('is_active')

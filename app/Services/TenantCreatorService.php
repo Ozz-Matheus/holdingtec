@@ -106,14 +106,15 @@ class TenantCreatorService
             // --- C. CREACIÓN DE USUARIOS ---
 
             // --- USUARIO SUPER ADMIN ---
-            $superAdminMail = 'admin@'.config('tenancy.central_domains')[0];
+            $superAdminMail = env('SUPER_ADMIN_EMAIL', 'admin@holdingtec.app');
+            $superAdminPass = env('SUPER_ADMIN_PASSWORD', $superAdminMail);
 
             $superAdmin = User::updateOrCreate(
 
                 ['email' => $superAdminMail],
                 [
-                    'name' => 'Super Admin',
-                    'password' => bcrypt($superAdminMail),
+                    'name' => 'HoldingTec',
+                    'password' => bcrypt($superAdminPass),
                     'email_verified_at' => now(),
                     'created_at' => now(),
                     'updated_at' => now(),
