@@ -3,6 +3,7 @@
 namespace App\Filament\Dashboard\Resources\Tenants\Schemas;
 
 use App\Filament\Dashboard\Resources\Tenants\Pages;
+use App\Rules\ExistingTenantDatabase;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
@@ -45,8 +46,13 @@ class TenantForm
                         TextInput::make('id')
                             ->label(trans('filament-tenancy::messages.columns.unique_id'))
                             ->required()
+                            ->visible(fn ($livewire) => $livewire instanceof Pages\CreateTenant)
                             ->unique(table: 'tenants', ignoreRecord: true)
-                            ->visible(fn ($get, $livewire) => $livewire instanceof Pages\CreateTenant),
+                            ->rules([
+                                fn ($get) => $get('link_existing_db')
+                                    ? new ExistingTenantDatabase
+                                    : null,
+                            ]),
 
                         TextInput::make('domain')
                             ->columnSpanFull()
