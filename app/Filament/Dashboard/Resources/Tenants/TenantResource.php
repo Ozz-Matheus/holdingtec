@@ -4,7 +4,6 @@ namespace App\Filament\Dashboard\Resources\Tenants;
 
 use App\Filament\Dashboard\Resources\Tenants\Pages\CreateTenant;
 use App\Filament\Dashboard\Resources\Tenants\Pages\EditTenant;
-use App\Filament\Dashboard\Resources\Tenants\Pages\ImportDbTenant;
 use App\Filament\Dashboard\Resources\Tenants\Pages\ListTenants;
 use App\Filament\Dashboard\Resources\Tenants\Pages\ViewTenant;
 use App\Filament\Dashboard\Resources\Tenants\RelationManagers\DomainsRelationManager;
@@ -54,7 +53,6 @@ class TenantResource extends Resource
         return [
             'index' => ListTenants::route('/'),
             'create' => CreateTenant::route('/create'),
-            'import' => ImportDbTenant::route('/import'),
             'view' => ViewTenant::route('/{record}'),
             'edit' => EditTenant::route('/{record}/edit'),
         ];
