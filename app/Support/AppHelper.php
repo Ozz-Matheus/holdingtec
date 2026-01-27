@@ -8,21 +8,19 @@ class AppHelper
 {
     public static function getHomeUrl(): string
     {
-        $currentHost = request()->getHost();
-        $centralDomains = config('tenancy.central_domains', []);
+        // 1. Centralizamos la lógica de decisión
+        $panelId = in_array(request()->getHost(), config('tenancy.central_domains', []))
+            ? 'dashboard'
+            : 'admin';
 
-        if (in_array($currentHost, $centralDomains)) {
-            try {
-                return Filament::getPanel('dashboard')->getUrl();
-            } catch (\Throwable $e) {
-                return url('/dashboard');
-            }
-        } else {
-            try {
-                return Filament::getPanel('admin')->getUrl();
-            } catch (\Throwable $e) {
-                return url('/admin');
-            }
+        // 2. Intentamos obtener la ruta oficial del panel
+        try {
+            return Filament::getPanel($panelId)?->getUrl() ?? url("/{$panelId}");
+        } catch (\Throwable) {
+            // 3. Fallback silencioso: Si el panel no carga, devolvemos la URL manual
+            // Esto evita romper la navegación del usuario.
+            return url("/{$panelId}");
         }
+
     }
 }

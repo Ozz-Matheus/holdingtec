@@ -28,6 +28,8 @@ class DomainsRelationManager extends RelationManager
                 TextInput::make('domain')
                     ->required()
                     ->label(trans('filament-tenancy::messages.domains.columns.domain'))
+                    ->regex('/^[a-z0-9]+(-[a-z0-9]+)*$/')
+                    ->helperText('Solo letras minúsculas, números y guiones (ej: mi-empresa)')
                     ->prefix(request()->getScheme().'://')
                     ->suffix('.'.request()->getHost())
                     ->maxLength(255),

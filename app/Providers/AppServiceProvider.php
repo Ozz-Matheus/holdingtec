@@ -6,6 +6,7 @@ use App\Models\Tenant;
 use App\Observers\TenantObserver;
 use App\Services\TenantStorageInitializer;
 use Filament\Facades\Filament;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Spatie\Permission\PermissionRegistrar;
 use Stancl\Tenancy\Events\TenancyBootstrapped;
@@ -44,7 +45,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // Este bloque crea automáticamente el directorio para el tenant
-        \Event::listen(TenancyBootstrapped::class, function ($event) {
+        Event::listen(TenancyBootstrapped::class, function ($event) {
 
             $tenantId = tenant()?->getTenantKey();
 
