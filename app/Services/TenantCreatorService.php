@@ -3,11 +3,15 @@
 namespace App\Services;
 
 use App\Enums\RoleEnum;
+use App\Mail\TenantCredentialsMail;
 use App\Models\Tenant;
 use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class TenantCreatorService
 {
@@ -106,8 +110,21 @@ class TenantCreatorService
             // --- C. CREACIÓN DE USUARIOS ---
 
             // --- USUARIO SUPER ADMIN ---
+
             $superAdminMail = env('SUPER_ADMIN_EMAIL', 'admin@holdingtec.app');
-            $superAdminPass = env('SUPER_ADMIN_PASSWORD', $superAdminMail);
+
+            // 1. Definir contraseña según el entorno
+            if (App::isProduction()) {
+
+                // Producción: Generar contraseña aleatoria y segura
+                $superAdminPass = Str::random(16);
+
+                Mail::to($superAdminMail)->send(new TenantCredentialsMail($tenant->name, $superAdminPass));
+
+            } else {
+                // Local: Usar variable de entorno o 'password' por defecto (nunca el email)
+                $superAdminPass = env('SUPER_ADMIN_PASSWORD', 'password');
+            }
 
             $superAdmin = User::updateOrCreate(
 

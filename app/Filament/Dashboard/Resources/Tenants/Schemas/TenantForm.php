@@ -89,10 +89,6 @@ class TenantForm
                             ->revealable()
                             ->dehydrated(false),
 
-                        Toggle::make('is_active')
-                            ->label(trans('filament-tenancy::messages.columns.is_active'))
-                            ->default(true),
-
                     ]),
 
             ])->columns(1);
