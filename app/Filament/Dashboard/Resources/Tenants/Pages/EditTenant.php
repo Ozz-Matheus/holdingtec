@@ -40,33 +40,28 @@ class EditTenant extends EditRecord
         }
 
         try {
-            if (! config('filament-tenancy.single_database')) {
-                $dbName = config('tenancy.database.prefix').$record->id.config('tenancy.database.suffix');
-                config(['database.connections.dynamic.database' => $dbName]);
+
+            // Inicializamos el tenant (maneja conexión, caché, storage, etc.)
+            tenancy()->initialize($record);
+
+            $userQuery = DB::table('users')->where('email', $record->email);
+
+            if (config('filament-tenancy.single_database')) {
+                $userQuery->where('tenant_id', $record->id);
+                $updateData['tenant_id'] = $record->id;
             }
-            DB::purge('dynamic');
 
-            DB::connection('dynamic')->getPdo();
-        } catch (\Exception $e) {
-            throw new \Exception("Failed to connect to tenant database: {$dbName}"); // 📌 Checar esta excepción.
+            $userQuery->updateOrInsert(
+                ['email' => $record->email],
+                $updateData
+            );
+
+        } catch (\Throwable $e) {
+            throw new \Exception("Error al actualizar usuario del tenant {$record->id}: {$e->getMessage()}");
+        } finally {
+            // Cerramos el contexto del tenant
+            tenancy()->end();
         }
-
-        $user = DB::connection('dynamic')
-            ->table('users')
-            ->where('email', $record->email);
-
-        if (config('filament-tenancy.single_database')) {
-            $user = $user->where('tenant_id', $record->id);
-
-            $updateData['tenant_id'] = $record->id;
-        }
-
-        $user->updateOrInsert(
-            [
-                'email' => $record->email,
-            ],
-            $updateData,
-        );
 
         return $data;
     }
