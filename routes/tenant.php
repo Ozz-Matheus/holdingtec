@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Tenant\Auth\NewPasswordController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,5 +27,13 @@ Route::middleware([
     }
 
     // Your Tenant routes here
+
+    // Ruta para mostrar el formulario (El link del email apunta aquí)
+    Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])
+        ->name('password.reset');
+
+    // Ruta para procesar el cambio de contraseña
+    Route::post('/reset-password', [NewPasswordController::class, 'store'])
+        ->name('password.update');
 
 });

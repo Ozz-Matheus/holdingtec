@@ -12,15 +12,15 @@ class TenantCredentialsMail extends Mailable
 
     public string $tenantName;
 
-    public string $superAdminPass;
+    public string $resetUrl;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(string $tenantName, string $superAdminPass)
+    public function __construct(string $tenantName, string $resetUrl)
     {
         $this->tenantName = $tenantName;
-        $this->superAdminPass = $superAdminPass;
+        $this->resetUrl = $resetUrl;
     }
 
     /**

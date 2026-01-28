@@ -52,7 +52,6 @@ class CreateTenant extends CreateRecord
         // 2. Configurar el Super Admin solamente.
         TenantCreatorService::setup(
             $this->record,
-            $this->form->getRawState()['password'],
             runMigrations: false,
             runSeeds: false
         );

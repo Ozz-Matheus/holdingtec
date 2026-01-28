@@ -12,7 +12,10 @@ Credenciales del Tenant
 
 <ul>
     <li><strong>Credenciales del Tenant :</strong> {{ $tenantName }}</li>
-    <li><strong>Contraseña :</strong> {{ $superAdminPass }}</li>
+    <li>
+        <strong>Url de restablecimiento de contraseña :</strong>
+        <a href="{{ $resetUrl }}" target="_blank" class="button" >Ir al Sistema</a>
+    </li>
 </ul>
 
 @endsection

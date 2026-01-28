@@ -19,8 +19,8 @@ class AdminSeeder extends Seeder
             'guard_name' => 'web',
         ]);
 
-        $email = env('SUPER_ADMIN_EMAIL', 's@holdingtec.app');
-        $password = env('SUPER_ADMIN_PASSWORD', 'password');
+        $email = config('holdingtec.super_admin.email', 's@holdingtec.app');
+        $password = config('holdingtec.super_admin.password', 'password');
 
         $superAdmin = new User;
         $superAdmin->name = 'HoldingTec Admin';
