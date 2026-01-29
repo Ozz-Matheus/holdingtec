@@ -22,9 +22,11 @@ class TenantCreatorService
      */
     public static function create(array $data): Tenant
     {
-        return DB::transaction(function () use ($data) {
+        // 1. CREACIÓN DEL REGISTRO (Dentro de Transacción)
+        // Esto es rápido y solo bloquea la BD central el tiempo mínimo necesario.
+        $tenant = DB::transaction(function () use ($data) {
 
-            // 1. Instanciamos sin guardar todavía
+            // Instanciamos sin guardar todavía
             $tenant = new Tenant;
 
             if (isset($data['id'])) {
@@ -34,12 +36,12 @@ class TenantCreatorService
             // Llenamos datos básicos
             $tenant->fill(collect($data)->except(['domain', 'password_confirmation'])->toArray());
 
-            // 2. Guardamos silenciosamente
+            // Guardamos silenciosamente
             // Esto evita conflictos con el paquete Tomato tenacy
             $tenant->saveQuietly();
 
             // Asignamos metadatos directamente
-            // 3. Esto evita conflictos con el paquete Tomato tenacy
+            // Esto evita conflictos con el paquete Tomato tenacy
             DB::table('tenants')->where('id', $tenant->id)->update([
                 'user_id' => auth()->id(),
                 'data' => json_encode([
@@ -49,18 +51,28 @@ class TenantCreatorService
                 ]),
             ]);
 
-            // 4. Creamos el sub dominio
+            // Creamos el sub dominio
             $tenant->domains()->create(['domain' => $data['domain']]);
 
-            // 5. Preparamos la base de datos del Tenant (Admin, Migraciones, etc.)
+            return $tenant;
+
+        });
+
+        // 2. Preparamos la base de datos del Tenant (Admin, Migraciones, etc.)
+        try {
             self::setup(
                 $tenant,
                 runMigrations: true,
                 runSeeds: true
             );
+        } catch (\Throwable $e) {
+            // Rollback manual si falla el setup
+            $tenant->delete();
+            Log::critical("Fallo setup Tenant {$tenant->id}: {$e->getMessage()}");
+            throw $e;
+        }
 
-            return $tenant;
-        });
+        return $tenant;
     }
 
     /**

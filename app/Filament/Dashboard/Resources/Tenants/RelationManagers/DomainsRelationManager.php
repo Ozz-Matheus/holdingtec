@@ -31,7 +31,7 @@ class DomainsRelationManager extends RelationManager
                     ->regex('/^[a-z0-9]+(-[a-z0-9]+)*$/')
                     ->helperText('Solo letras minúsculas, números y guiones (ej: mi-empresa)')
                     ->prefix(request()->getScheme().'://')
-                    ->suffix('.'.request()->getHost())
+                    ->suffix('.'.config('filament-tenancy.central_domain'))
                     ->maxLength(255),
             ]);
     }
@@ -45,7 +45,7 @@ class DomainsRelationManager extends RelationManager
                     ->label(trans('filament-tenancy::messages.domains.columns.domain')),
                 TextColumn::make('full-domain')
                     ->label(trans('filament-tenancy::messages.domains.columns.full'))
-                    ->getStateUsing(fn ($record) => Str::of($record->domain)->append('.')->append(request()->getHost())),
+                    ->getStateUsing(fn ($record) => Str::of($record->domain)->append('.')->append(config('filament-tenancy.central_domain'))),
             ])
             ->filters([
                 //

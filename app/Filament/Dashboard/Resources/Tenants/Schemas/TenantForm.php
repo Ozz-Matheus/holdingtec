@@ -61,7 +61,7 @@ class TenantForm
                             ->visible(fn ($context) => $context === 'create')
                             ->unique(table: 'domains', ignoreRecord: true)
                             ->prefix(request()->getScheme().'://')
-                            ->suffix('.'.request()->getHost()),
+                            ->suffix('.'.config('filament-tenancy.central_domain')),
 
                         TextInput::make('email')
                             ->label(trans('filament-tenancy::messages.columns.email'))

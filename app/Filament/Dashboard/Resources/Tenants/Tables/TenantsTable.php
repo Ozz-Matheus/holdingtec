@@ -70,7 +70,7 @@ class TenantsTable
                     ->iconButton()
                     ->icon('heroicon-s-arrow-left-on-rectangle')
                     ->action(function ($record) {
-                        $token = tenancy()->impersonate($record, 1, '/admin', 'web');
+                        $token = tenancy()->impersonate($record, auth()->id(), '/admin', 'web');
 
                         return redirect()->to(request()->getScheme().'://'.$record->domains[0]->domain.'.'.config('filament-tenancy.central_domain').'/login/url?token='.$token->token.'&email='.urlencode($record->email));
                     }),
