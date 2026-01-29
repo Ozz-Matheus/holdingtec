@@ -10,7 +10,6 @@ use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
-use Illuminate\Support\Str;
 
 class UsersTable
 {
@@ -28,9 +27,7 @@ class UsersTable
                     ->searchable(),
                 TextColumn::make('roles.name')
                     ->label(__('Roles'))
-                    ->formatStateUsing(
-                        fn (string $state): string => RoleEnum::tryFrom($state)?->label() ?? Str::headline($state)
-                    )
+                    ->formatStateUsing(fn (string $state) => RoleEnum::match($state))
                     ->searchable()
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {

@@ -8,7 +8,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
-use Illuminate\Support\Str;
 
 class UserForm
 {
@@ -50,7 +49,7 @@ class UserForm
                                     ->when(! auth()->user()->hasRole(RoleEnum::SUPER_ADMIN->value), fn ($q) => $q->where('name', '!=', RoleEnum::SUPER_ADMIN->value))
                             )
                             ->bulkToggleable()
-                            ->getOptionLabelFromRecordUsing(fn ($record) => Str::headline($record->name))
+                            ->getOptionLabelFromRecordUsing(fn ($record) => RoleEnum::match($record->name))
                             ->disabled(fn ($record) => auth()->user()->hasRole(RoleEnum::SUPER_ADMIN->value) && $record?->is(auth()->user()))
                             ->columnSpanFull()
                             ->columns(3),

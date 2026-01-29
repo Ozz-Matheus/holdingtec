@@ -7,6 +7,7 @@ use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class EditTenant extends EditRecord
 {
@@ -35,8 +36,9 @@ class EditTenant extends EditRecord
             'email' => $data['email'],
         ];
 
-        if (isset($data['password'])) {
-            $updateData['password'] = $data['password'];
+        if (isset($data['password']) && filled($data['password'])) {
+
+            $updateData['password'] = Hash::make($data['password']);
         }
 
         try {

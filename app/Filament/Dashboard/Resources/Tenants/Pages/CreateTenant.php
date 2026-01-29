@@ -7,6 +7,7 @@ use App\Services\TenantCreatorService;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class CreateTenant extends CreateRecord
 {
@@ -19,6 +20,11 @@ class CreateTenant extends CreateRecord
 
     protected function handleRecordCreation(array $data): Model
     {
+        // la contraseña ya encriptada lista para guardar.
+        if (isset($data['password']) && filled($data['password'])) {
+            $data['password'] = Hash::make($data['password']);
+        }
+
         // Detectamos si es importación basada en el Toggle del form
         $this->isLinkingExisting = $data['link_existing_db'] ?? false;
 
